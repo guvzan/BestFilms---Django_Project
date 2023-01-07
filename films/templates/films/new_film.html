@@ -1,0 +1,11 @@
+{% extends 'films/base.html' %}
+
+{% block content %}
+    <h1>Додати новий фільм:</h1>
+
+    <form action="{% url 'films:new_film' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button name="submit">Додати</button>
+    </form>
+{% endblock content %}

@@ -1,0 +1,60 @@
+{% extends 'films/base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>Блог</title>
+{% endblock head %}
+
+
+{% block content %}
+<style>
+    .all-posts{
+    width: 80%;
+    align: center;
+    margin-left: 10%;
+    margin-top: 5%;
+    border-radius: 5px;
+    border: #9E972B solid 3px;
+}
+</style>
+    <h1 align="center">Кіно-Блог</h1>
+
+        <ul class="post-list">
+            {% for post in posts.texts %}
+                <style>
+                    .all-posts{
+                        background: rgb(111, 111, 111);
+                    }
+                </style>
+                <div class="all-posts">
+                    <li>
+                        <div class="post">
+                            <p class="post-author">
+                                {% if post.author.image %}
+                                    <img class="post-avatar comment-avatar comment-content" src="{{ post.author.image.url }}">
+                                {% else %}
+                                    <img class="post-avatar comment-avatar comment-content" src="{% static 'films/img/anon_image.png' %}">
+                                {% endif %}
+                                {{ post.author.username }}
+                            </p>
+                            <div class="post-content comment-content">
+                                <p class="post-text">{{ post.text }}</p>
+                            </div>
+                            <table>
+                                <tr>
+                                    <td width="83%"><p>Фільм: {{ post.film.title }}</p></td>
+                                    <td width="17%"><p>Опубліковано: {{ post.date_added|date:'d M Y' }}</p></td>
+                                </tr>
+                            </table>
+
+
+
+                        </div>
+                    </li>
+                </div>
+
+            {% endfor %}
+        </ul>
+
+
+{% endblock content %}

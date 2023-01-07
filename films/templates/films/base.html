@@ -1,0 +1,73 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link type="text/css" href="{% static 'films/css/style.css' %}" rel="stylesheet">
+    {% block head %}
+
+    {% endblock head %}
+</head>
+<body>
+<header>
+        <table>
+            <tr>
+                <td><a href="{% url 'films:index' %}"><img class="logo" src="{% static 'films/img/logo.png' %}"></a></td>
+                <td>&nbsp;</td>
+                <td><a href="{% url 'films:more' %}">Детальніше</a></td>
+                <td>&nbsp;</td>
+                <td><a href="{% url 'films:blog' %}">Блог</a></td>
+                <td>&nbsp;</td>
+                <td><a href="#">Форум</a></td>
+                <td>&nbsp;</td>
+                <td><a href="{% url 'films:new_tag' %}">Додати тег</a></td>
+                <td>&nbsp;</td>
+                <td><a href="{% url 'films:new_film' %}">Додати фільм</a></td>
+                {% if user.is_authenticated %}
+                    <td width="35%">&nbsp;</td>
+                    <td><a href="{% url 'users:account' user.id %}">Моя сторінка</a></td>
+                    <td>&nbsp;</td>
+                    <td><a href="{% url 'users:logout' %}">Вийти</a></td>
+                {% else %}
+                    <td width="47%">&nbsp;</td>
+                    <td><a href="{% url 'users:register' %}">Зареєструватись</a></td>
+                    <td><a href="{% url 'users:login' %}">Увійти</a></td>
+                {% endif %}
+            </tr>
+        </table>
+    </header>
+    {% block content %}
+
+    {% endblock content %}
+
+    <footer>
+        <table class="footer-content">
+            <tr>
+                <td>
+                    <p>Що в нас тут за сайт?</p>
+                    <ul>
+                        <li><a href="#">Нові фільми</a></li>
+                        <li><a href="#">Світова класика</a></li>
+                        <li><a href="#">Трендові серіали</a></li>
+                        <li><a href="#">Трейлери новинок</a></li>
+                    </ul>
+                </td>
+                <td>&nbsp</td>
+                <td>&nbsp</td>
+                <td>&nbsp</td>
+                <td>&#169;Rights not reserved. Copy, please.</td>
+                <td>
+                    <p>Навігаця сайтом</p>
+                    <ul>
+                        <li><a href="#">На головну</a></li>
+                        <li><a href="#">Блог</a></li>
+                        <li><a href="#">Випадкова категорія</a></li>
+                        <li><a href="{% url 'films:random_film' %}">Випадковий фільм</a></li>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </footer>
+</body>
+</html>

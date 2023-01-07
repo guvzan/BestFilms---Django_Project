@@ -1,0 +1,9 @@
+{% extends 'films/base.html' %}
+
+{% block content %}
+    <form action="{% url 'users:create_page_post' user.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button name="submit">Опублікувати</button>
+    </form>
+{% endblock content %}

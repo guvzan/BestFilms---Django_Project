@@ -1,0 +1,11 @@
+{% extends 'films/base.html' %}
+
+{% block content %}
+    <h1>Додати новий тег:</h1>
+
+    <form action="{% url 'films:new_tag' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button name="submit">Додати</button>
+    </form>
+{% endblock content %}

@@ -1,0 +1,90 @@
+{% extends 'films/base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>BestFilms</title>
+{% endblock head %}
+
+{% block content %}
+    <div class="main-content">
+        <h1 class="index-title">Наші фільми</h1>
+        <div class="category-title">
+            <h2 class="category-title-text">Бойовики</h2>
+        </div>
+
+<!--        Поставити слайдер-->
+
+        <table class="preview-content">
+            <tr>
+            {% for film in blockbusters %}
+                <td>
+                    <div class="film-preview">
+                        <a href="{% url 'films:film' film.id %}"><img class="preview-image" src="{{ film.image.url }}"></a>
+                    </div>
+
+                </td>
+
+            {% endfor %}
+                <td>
+                    <a href="#"><img class="next-icon" src="{% static 'films/img/show_more.png' %}"></a>
+                </td>
+            </tr>
+        </table>
+
+<!--        Кінець слайдера-->
+
+    <div class="category-title">
+        <h2 class="category-title-text">Фантастика</h2>
+    </div>
+
+<!--        Поставити слайдер-->
+
+        <table class="preview-content">
+            <tr>
+            {% for film in fantastic %}
+                <td>
+                    <div class="film-preview">
+                        <a href="{% url 'films:film' film.id %}"><img class="preview-image" src="{{ film.image.url }}"></a>
+                    </div>
+
+                </td>
+
+            {% endfor %}
+                <td>
+                    <a href="#"><img class="next-icon" src="{% static 'films/img/show_more.png' %}"></a>
+                </td>
+            </tr>
+        </table>
+
+<!--        Кінець слайдера-->
+
+
+
+        <div class="category-title">
+        <h2 class="category-title-text">Детективи</h2>
+    </div>
+
+<!--        Поставити слайдер-->
+
+        <table class="preview-content">
+            <tr>
+            {% for film in detective %}
+                <td>
+                    <div class="film-preview">
+                        <a href="{% url 'films:film' film.id %}"><img class="preview-image" src="{{ film.image.url }}"></a>
+                    </div>
+
+                </td>
+
+            {% endfor %}
+                <td>
+                    <a href="#"><img class="next-icon" src="{% static 'films/img/show_more.png' %}"></a>
+                </td>
+            </tr>
+        </table>
+
+<!--        Кінець слайдера-->
+
+
+    </div>
+{% endblock content %}

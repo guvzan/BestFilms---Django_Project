@@ -1,0 +1,45 @@
+{% extends 'films/base.html' %}
+
+{% block head %}
+    <title>BestFilms</title>
+{% endblock head %}
+
+{% block content %}
+        {% for film in films %}
+            <div class="film-container">
+                <table>
+                    <tr>
+                        <td colspan="5"><h1 class="title">{{ film.title }}</h1></td>
+                    </tr>
+                    <tr>
+                        <td><a href="{% url 'films:film' film.id %}"><img class="film-image" src="{{ film.image.url }}"></a></td>
+                        <td colspan="4"><p class="film-caption">{{ film.text }}</p></td>
+                    </tr>
+                    <tr class="detail-info">
+                        <td class="button-td"><a href="{% url 'films:film' film.id %}"><button class="watch-film-button">Дивитись онлайн</button></a></td>
+                        <td><p class="film-info">Тривалість: {{ film.duration }}хв</p></td>
+                        <td><p class="film-info">{{ film.country }}</p></td>
+
+                        {% if film.tag1 %}
+                            <td><p class="film-info">{{ film.tag1 }}</p></td>
+                        {% else %}
+                            <td>&nbsp;</td>
+                        {% endif %}
+
+                        {% if film.tag2 %}
+                            <td><p class="film-info">{{ film.tag2 }}</p></td>
+                        {% else %}
+                            <td>&nbsp;</td>
+                        {% endif %}
+                    </tr>
+                </table>
+
+
+
+
+
+
+
+            </div>
+        {% endfor %}
+{% endblock content %}

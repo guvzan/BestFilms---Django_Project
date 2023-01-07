@@ -1,0 +1,98 @@
+{% extends 'films/base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>{{ accuser.username }}</title>
+{% endblock head %}
+
+{% block content %}
+<style>
+.like-button{
+    background:  url('{% static 'films/img/like_hollow.png' %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+
+.like-button:hover{
+    background:  url('{% static 'films/img/like.png' %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+</style>
+
+    <div class="account-content">
+        <table>
+            <tr>
+                <td>
+                    {% if accuser.image %}
+                        <img id="account-avatar" src="{{ accuser.image.url }}">
+                    {% else %}
+                        <img id="account-avatar" src="{% static 'films/img/anon_image.png' %}">
+                    {% endif %}
+                    <div id="name" align="center"><b><i>{{ accuser.username }}</i></b></div>
+                </td>
+                <td width="100%">
+                    <div id="status">
+                        <b>Улюблена цитата:</b> <p><i>{{ accuser.status }}</i></p>
+                        <b>Про себе:</b> <p><i>{{ accuser.about }}</i></p>
+                        <b>Дата народження:</b> <p><i>{{ accuser.dob|date:'d M Y' }}</i></p>
+                    </div>
+
+                </td>
+            </tr>
+            <tr>
+
+
+            </tr>
+        </table>
+
+    </div>
+
+    <div class="my-posts">
+        <h1>{{ accuser.id }} - {{ user.id }}</h1>
+        {% if accuser.id == user.id %}
+            <h1 align="center">Мої дописи <a href="{% url 'users:create_page_post' user.id %}"><button>+</button></a></h1>
+
+        {% else %}
+            <h1 align="center">Дописи {{ accuser.username }}</h1>
+        {% endif %}
+        <ul class="no-bullets">
+            {% for post in user_posts %}
+            <li>
+                <div class="post-on-page">
+                    <div class="inner-content">
+                        {% for p in post %}
+                            <h2 align="center">{{ p.title }}</h2>
+                            <p>{{ p.text }}</p>
+                            <p align="center"><img id="post-image" src="{{ p.image.url }}"></p>
+                            <table id="post-info">
+                                <tr>
+                                    <td align="left">
+                                        <a id="author-href" href="{% url 'users:account' p.author.id %}">{{ p.author.username }}</a> --- {{ p.date_added|date:'d M Y' }}
+                                    </td>
+                                    <td align="right">
+                                        <form action="{% url 'users:acclike' accuser.id p.id %}">
+                                            <button formaction="{% url 'users:share' p.id user.id %}">Поділитись</button>
+                                            <button align="right" class="like-button"></button> {{ p.likes }}
+                                        </form>
+                                    </td>
+                                    <td>Liked - {{ p.list_of_likers.liked }}</td>
+                                    <td>Saved - {{ p.list_of_likers.saved }}</td>
+                                </tr>
+
+                            </table>
+                        {% endfor %}
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,77 @@
+{% extends 'films/base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>{{ film.title }}</title>
+{% endblock head %}
+
+
+
+{% block content %}
+
+<style>
+.like-button{
+    background:  url('{% static 'films/img/like_hollow.png' %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+
+.like-button:hover{
+    background:  url('{% static 'films/img/like.png' %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+</style>
+
+    <div class="film-trailer-container">
+        <h1 align="center">Трейлер</h1>
+        <iframe class="film-trailer" width="560" height="315" src={{ film.url }} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="film-comments-container">
+        <h1 align="center">Коментарі</h1>
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    <div class="comment">
+                        <p>
+                            <form action="{% url 'films:add_like' film.id comment.id %}">
+                                {% if comment.author.image %}
+                                    <a href="{% url 'users:account' comment.author.id %}"><img class="comment-avatar comment-content" src="{{ comment.author.image.url }}"></a>
+                                {% else %}
+                                    <img class="comment-avatar comment-content" src="{% static 'films/img/anon_image.png' %}">
+                                {% endif %}
+                                <a href="{% url 'users:account' comment.author.id %}">{{ comment.author }}</a>, {{ comment.date_added|date:'Y M d' }}
+                                <button class="like-button"></button>
+                                {{ comment.likes }}
+                            </form>
+                        </p>
+
+
+                        <div class="comment-content">
+                            <p class="comment-title"><b>{{ comment.title }}</b></p>
+                            <p><i>{{ comment.text }}</i></p>
+
+                        </div>
+
+                    </div>
+                </li>
+            {% empty %}
+                <p>Коментарів до цього фільму ще немає.</p>
+            {% endfor %}
+            <h3 align="center">Додати коментар</h3>
+            <div class="comment-content">
+                <form action="{% url 'films:film' film.id %}" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button name="submit">Опублікувати</button>
+                </form>
+            </div>
+
+        </ul>
+    </div>
+{% endblock content %}
