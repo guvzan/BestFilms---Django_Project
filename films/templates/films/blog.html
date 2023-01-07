@@ -31,11 +31,11 @@
                         <div class="post">
                             <p class="post-author">
                                 {% if post.author.image %}
-                                    <img class="post-avatar comment-avatar comment-content" src="{{ post.author.image.url }}">
+                                    <a href="{% url 'users:account' post.author.id %}"><img class="post-avatar comment-avatar comment-content" src="{{ post.author.image.url }}"></a>
                                 {% else %}
-                                    <img class="post-avatar comment-avatar comment-content" src="{% static 'films/img/anon_image.png' %}">
+                                    <a href="{% url 'users:account' post.author.id %}"><img class="post-avatar comment-avatar comment-content" src="{% static 'films/img/anon_image.png' %}"></a>
                                 {% endif %}
-                                {{ post.author.username }}
+                                <a href="{% url 'users:account' post.author.id %}">{{ post.author.username }}</a>
                             </p>
                             <div class="post-content comment-content">
                                 <p class="post-text">{{ post.text }}</p>
