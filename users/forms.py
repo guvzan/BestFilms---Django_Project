@@ -23,3 +23,18 @@ class PagePostForm(forms.ModelForm):
         widgets = {
             'author': forms.TextInput(attrs={'type': 'hidden'}),
             }
+
+
+class MessageForm(forms.ModelForm):
+    """Форма для написання повідомлення"""
+    def __init__(self, *args, **kwargs):
+        user_id = kwargs.pop('user_id')
+        super().__init__(*args, **kwargs)
+        self.fields['author'].initial = CustomUser.objects.get(id=user_id)
+    class Meta:
+        model = Message
+        fields = ["text", "author", "receiver"]
+        widgets = {
+            'author': forms.TextInput(attrs={'type': 'hidden'}),
+            'text': forms.Textarea(attrs={'cols': 50, 'rows': 10}),
+        }

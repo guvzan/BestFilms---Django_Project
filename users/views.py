@@ -24,6 +24,15 @@ def register(request):
 def account(request, user_id):
     """Сторінка користувача за ід"""
     user = CustomUser.objects.get(id=user_id)
+    inbox = Inbox.objects.filter(customuser=user_id)
+    if not inbox:
+        new_inbox = Inbox(customuser=user)
+        new_inbox.save()
+        inbox = Inbox.objects.filter(customuser=user_id)
+
+    user_posts = []
+    new_messages_count = len(inbox[0].messages['unseen'])
+
     user_posts = []
     test_post = PagePost.objects.filter(id=1)
     if user.post_list:
@@ -31,9 +40,14 @@ def account(request, user_id):
             exact_post = PagePost.objects.filter(id=id)
             if exact_post:
                 user_posts.insert(0, exact_post)
+
+
+
     context = {
         'accuser': user,
-        'user_posts': user_posts
+        'user_posts': user_posts,
+        'inbox': inbox,
+        'new_messages_count': new_messages_count
     }
     return render(request, 'users/account.html', context)
 
@@ -78,5 +92,81 @@ def create_page_post(request, user_id):
         'form': form
     }
     return render(request, 'users/add_acc_post.html', context)
+
+
+def show_messages(request, user_id):
+    """Показати повідомлення"""
+    accuser = CustomUser.objects.get(id=user_id)
+    inbox = Inbox.objects.get(customuser=user_id)
+    unseen_messages = []
+    seen_messages = []
+    sent_messages = []
+
+    #Твоя задача -- доробити повідомлення
+
+    for id in inbox.messages['unseen']:
+        exact_message = Message.objects.filter(id=id)
+        if exact_message:
+            unseen_messages.insert(0, exact_message)
+
+    for id in inbox.messages['seen']:
+        exact_message = Message.objects.filter(id=id)
+        if exact_message:
+            seen_messages.insert(0, exact_message)
+
+    for id in inbox.messages['send']:
+        exact_message = Message.objects.filter(id=id)
+        if exact_message:
+            sent_messages.insert(0, exact_message)
+
+    if request.method == 'GET':
+        form = MessageForm(user_id=user_id)
+    else:
+        form = MessageForm(request.POST, user_id=user_id)
+        if form.is_valid():
+            new_message = form.save()
+            inbox.messages['send'].append(new_message.id)
+            receiver_inbox = Inbox.objects.get(id=request.POST['receiver'])
+            receiver_inbox.messages['unseen'].append(new_message.id)
+            inbox.save()
+            receiver_inbox.save()
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', 'films:index'))
+
+
+
+    context = {
+        'accuser': accuser,
+        'inbox': inbox,
+        'unseen_messages': unseen_messages,
+        'seen_messages': seen_messages,
+        'sent_messages': sent_messages,
+        'form': form
+    }
+    return render(request, 'users/messages.html', context)
+
+
+def mark_as_read(request, user_id, message_id):
+    """Позначити повідомлення як прочитане"""
+    message = Message.objects.get(id=message_id)
+    user = CustomUser.objects.get(id=user_id)
+    inbox = Inbox.objects.get(customuser=user)
+    inbox.messages['unseen'].remove(message_id)
+    inbox.messages['seen'].append(message_id)
+    inbox.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', 'films:index'))
+
+
+def delete_message(request, user_id, message_id):
+    """Видалити повідомлення"""
+    message = Message.objects.get(id=message_id)
+    user = CustomUser.objects.get(id=user_id)
+    inbox = Inbox.objects.get(customuser=user)
+
+    for cat in inbox.messages:
+        if int(message_id) in inbox.messages[cat]:
+            print(cat)
+            inbox.messages[cat].remove(message_id)
+    inbox.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', 'films:index'))
 
 

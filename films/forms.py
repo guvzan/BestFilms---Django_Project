@@ -32,3 +32,5 @@ class CommentForm(forms.ModelForm):
             'film': forms.TextInput(attrs={'type': 'hidden'}),
             'author': forms.TextInput(attrs={'type': 'hidden'}),
         }
+
+

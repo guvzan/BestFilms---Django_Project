@@ -7,6 +7,9 @@ def default_post_list():
 def default_list_of_likers():
     return dict(liked = [], saved = [])
 
+def default_messages():
+    return dict(unseen = [], seen =[], send = [])
+
 class CustomUser(AbstractUser):
     """Кастомний користувач"""
     status = models.CharField(max_length=100, default='---')
@@ -33,3 +36,23 @@ class PagePost(models.Model):
         """Лайкнути пост"""
         self.likes += 1
         self.save()
+
+
+class Inbox(models.Model):
+    """Поштова скринька. Для повідомлень, наприклад"""
+    messages = models.JSONField(blank=True, null=True, default=default_messages)
+    customuser = models.OneToOneField('CustomUser', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.customuser.username} inbox"
+
+
+class Message(models.Model):
+    """Повідомлення (як СМС)"""
+    text = models.TextField()
+    author = models.ForeignKey(CustomUser, related_name='author', on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id)
+    receiver = models.ForeignKey(CustomUser, related_name='receiver', on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id)
+    time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.text[:10]

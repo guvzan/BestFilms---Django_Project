@@ -1,0 +1,104 @@
+{% extends 'films/base.html' %}
+
+{% block content %}
+    <div class="account-content">
+        <div class="new-message">
+            <form action="{% url 'users:show_messages' user.id %}" method="post">
+                {% csrf_token %}
+                <h3>Нове повідомлення до {{ form.receiver }}</h3>
+                <p>{{ form.text }}</p>
+                <p><button id="send-message" name="submit">Надіслати</button></p>
+
+            </form>
+        </div>
+
+        <table class="message-table">
+            <tr align="center">
+                <th><h1>Непрочитані</h1></th>
+                <th><h1>Прочитані</h1></th>
+                <th><h1>Надіслані</h1></th>
+            </tr>
+            <tr>
+                <td>
+                    <ul>
+                        <div class="message-text">
+                            {% for query in unseen_messages %}
+                                {% for message in query %}
+                                    <li>
+                                        <div class="message-on-acc">
+                                            <p><b>From:</b> {{ message.author.username }}</p>
+                                            <p><i>{{ message.text }}</i></p>
+                                            <p><i>{{ message.time|date:'d-M-Y, h:m' }}</i></p>
+                                            <form action="{% url 'users:mark_as_read' user.id message.id %}">
+                                                <button>Прочитано</button>
+                                                <button formaction="{% url 'users:delete_message' user.id message.id %}">Видалити</button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% empty %}
+                                <li>Нічого ще немає</li>
+                            {% endfor %}
+                        </div>
+                    </ul>
+                </td>
+
+
+
+
+                <td>
+                    <ul>
+                        <div class="message-text">
+                            {% for query in seen_messages %}
+                                {% for message in query %}
+                                    <li>
+                                        <div class="post-on-page">
+                                            <p><b>From:</b> {{ message.author.username }}</p>
+                                            <p><i>{{ message.text }}</i></p>
+                                            <p><i>{{ message.time|date:'d-M-Y, h:m' }}</i></p>
+                                            <form action="{% url 'users:delete_message' user.id message.id %}">
+                                                <button>Видалити</button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% empty %}
+                                <li>Нічого ще немає</li>
+                            {% endfor %}
+                        </div>
+                    </ul>
+                </td>
+
+
+
+
+                <td>
+                    <ul>
+                        <div class="message-text">
+                            {% for query in sent_messages %}
+                                {% for message in query %}
+                                    <li>
+                                        <div class="post-on-page">
+                                            <p><b>From:</b> {{ message.author.username }}</p>
+                                            <p><i>{{ message.text }}</i></p>
+                                            <p><i>{{ message.time|date:'d-M-Y, h:m' }}</i></p>
+                                            <form action="{% url 'users:delete_message' user.id message.id %}">
+                                                <button>Видалити</button>
+                                            </form>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            {% empty %}
+                                <li>Нічого ще немає</li>
+                            {% endfor %}
+                        </div>
+                    </ul>
+                </td>
+
+
+            </tr>
+        </table>
+
+
+    </div>
+{% endblock content %}

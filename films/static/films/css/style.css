@@ -308,6 +308,37 @@ body{
     width: 100%;
 }
 
+.message-table{
+    width: 100%;
+    border: white solid 1px;
+    text-align: justify;
+}
+
+
+.message-text{
+    margin-left: auto;
+    margin-right: auto;
+    border: red solid 1px;
+}
+
+.new-message{
+    text-align: center;
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    resize: none;
+}
+
+
+#receiver-selector{
+    color: red;
+}
+
+.message-on-acc{
+}
+
+
+
 
 
 

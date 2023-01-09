@@ -6,16 +6,14 @@ from .forms import *
 
 def index(request):
     """Головна сторінка"""
-    blockbusters_id = Tag.objects.get(title='Бойовик')
-    blockbusters = Film.objects.filter(tag1=blockbusters_id) | Film.objects.filter(tag2=blockbusters_id)
-    fantastic = Film.objects.filter(tag1=4) | Film.objects.filter(tag2=4)
-    detective = Film.objects.filter(tag1=11) | Film.objects.filter(tag2=11)
+    blockbusters = []
+    blockbusters_id = Tag.objects.filter(title='Бойовик')
+    if blockbusters_id:
+        blockbusters = Film.objects.filter(tag1=blockbusters_id) | Film.objects.filter(tag2=blockbusters_id)
     films = Film.objects.filter()
     context = {
         'films': films[:4],
-        'blockbusters': blockbusters[:4],
-        'fantastic': fantastic,
-        'detective': detective
+        'blockbusters': blockbusters[:4]
     }
     return render(request, 'films/index.html', context)
 

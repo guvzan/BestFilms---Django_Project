@@ -22,4 +22,13 @@ urlpatterns = [
 
     #Написати пост на сторінці
     path('account/add_post/<int:user_id>/', views.create_page_post, name='create_page_post'),
+
+    #Сторінка з повідомленнями
+    path('account/messages/<int:user_id>/', views.show_messages, name='show_messages'),
+
+    #Позначити повідомлення як прочитане
+    path('account/messages/readed/<int:user_id>/<int:message_id>/', views.mark_as_read, name='mark_as_read'),
+
+    #Видалити повідомлення
+    path('account/messages/delete/<int:user_id>/<int:message_id>/', views.delete_message, name='delete_message'),
 ]

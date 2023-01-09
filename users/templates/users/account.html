@@ -55,6 +55,17 @@
 
     <div class="my-posts">
         <h1>{{ accuser.id }} - {{ user.id }}</h1>
+
+        {% if accuser.id == user.id %}
+            <div class="account-content">
+                <table>
+                    <tr>
+                        <td><a href="{% url 'users:show_messages' user.id %}">Мої повідомлення</a> -  {{ new_messages_count }}</td>
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+
         {% if accuser.id == user.id %}
             <h1 align="center">Мої дописи <a href="{% url 'users:create_page_post' user.id %}"><button>+</button></a></h1>
 
