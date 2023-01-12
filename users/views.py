@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 
 
@@ -21,6 +22,7 @@ def register(request):
     return render(request, 'registration/register.html', context)
 
 
+@login_required
 def account(request, user_id):
     """Сторінка користувача за ід"""
     user = CustomUser.objects.get(id=user_id)
@@ -52,6 +54,7 @@ def account(request, user_id):
     return render(request, 'users/account.html', context)
 
 
+@login_required
 def add_acc_like(request, user_id, post_id):
     """Додати лайк"""
     post = PagePost.objects.get(id = post_id)
@@ -59,6 +62,7 @@ def add_acc_like(request, user_id, post_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', 'films:index'))
 
 
+@login_required
 def share(request, post_id, user_id):
     """Поділитись дописом"""
     post = PagePost.objects.get(id = post_id)
@@ -76,6 +80,7 @@ def share(request, post_id, user_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', 'films:index'))
 
 
+@login_required
 def create_page_post(request, user_id):
     """Створити допис на сторінці"""
     user = CustomUser.objects.get(id=user_id)
@@ -94,6 +99,7 @@ def create_page_post(request, user_id):
     return render(request, 'users/add_acc_post.html', context)
 
 
+@login_required
 def show_messages(request, user_id):
     """Показати повідомлення"""
     accuser = CustomUser.objects.get(id=user_id)
@@ -101,8 +107,6 @@ def show_messages(request, user_id):
     unseen_messages = []
     seen_messages = []
     sent_messages = []
-
-    #Твоя задача -- доробити повідомлення
 
     for id in inbox.messages['unseen']:
         exact_message = Message.objects.filter(id=id)
@@ -123,6 +127,8 @@ def show_messages(request, user_id):
         form = MessageForm(user_id=user_id)
     else:
         form = MessageForm(request.POST, user_id=user_id)
+        print(form.is_valid())
+        print(request.POST)
         if form.is_valid():
             new_message = form.save()
             inbox.messages['send'].append(new_message.id)
@@ -145,6 +151,7 @@ def show_messages(request, user_id):
     return render(request, 'users/messages.html', context)
 
 
+@login_required
 def mark_as_read(request, user_id, message_id):
     """Позначити повідомлення як прочитане"""
     message = Message.objects.get(id=message_id)
@@ -156,6 +163,7 @@ def mark_as_read(request, user_id, message_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', 'films:index'))
 
 
+@login_required
 def delete_message(request, user_id, message_id):
     """Видалити повідомлення"""
     message = Message.objects.get(id=message_id)

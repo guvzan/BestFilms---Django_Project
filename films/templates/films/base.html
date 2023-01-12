@@ -1,5 +1,29 @@
 {% load static %}
 
+{% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags %} alert-{{ message.tags }}{% endif %}">{{ message|safe }}</div>
+    {% endfor %}
+  {% endif %}
+
+  {% if form.errors %}
+    <div class="alert alert-error">
+      <h4>Please fix the following errors</h4>
+      <ul>
+        {% for field in form %}
+          {% if field.errors %}
+            {% for error in field.errors %}
+              <li><a href="#id_{{ field.name }}" class="error">{{ error|escape }}</a></li>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+      {% if form.non_field_errors %}
+        {{ form.non_field_errors }}
+      {% endif %}
+    </div>
+  {% endif %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,30 +34,44 @@
     {% endblock head %}
 </head>
 <body>
+
+<style>
+    body{
+        background: url('{% static 'films/img/background.png' %}');
+        background-attachment: fixed;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+</style>
+
 <header>
         <table>
             <tr>
-                <td><a href="{% url 'films:index' %}"><img class="logo" src="{% static 'films/img/logo.png' %}"></a></td>
-                <td>&nbsp;</td>
-                <td><a href="{% url 'films:more' %}">Детальніше</a></td>
-                <td>&nbsp;</td>
-                <td><a href="{% url 'films:blog' %}">Блог</a></td>
-                <td>&nbsp;</td>
-                <td><a href="#">Форум</a></td>
-                <td>&nbsp;</td>
-                <td><a href="{% url 'films:new_tag' %}">Додати тег</a></td>
-                <td>&nbsp;</td>
-                <td><a href="{% url 'films:new_film' %}">Додати фільм</a></td>
-                {% if user.is_authenticated %}
-                    <td width="35%">&nbsp;</td>
-                    <td><a href="{% url 'users:account' user.id %}">Моя сторінка</a></td>
-                    <td>&nbsp;</td>
-                    <td><a href="{% url 'users:logout' %}">Вийти</a></td>
-                {% else %}
-                    <td width="47%">&nbsp;</td>
-                    <td><a href="{% url 'users:register' %}">Зареєструватись</a></td>
-                    <td><a href="{% url 'users:login' %}">Увійти</a></td>
-                {% endif %}
+                <td class="td-5">
+                    <div class="base-header">
+                        <a class="base-header" href="{% url 'films:index' %}"><img class="logo" src="{% static 'films/img/logo.png' %}"></a>
+                        <a class="base-header" href="{% url 'films:more' %}">Детальніше</a>
+                        <a class="base-header" href="{% url 'films:blog' %}">Блог</a>
+                        <a class="base-header" href="#">Форум</a>
+                        {% if user.is_authenticated %}
+                            <a class="base-header" href="{% url 'films:new_tag' %}">+ тег</a>
+                            <a class="base-header" href="{% url 'films:new_film' %}">+ фільм</a>
+                        {% endif %}
+                    </div>
+                </td>
+                <td class="td-5">
+                    {% if user.is_authenticated %}
+                        <div class="base-header-2">
+                            <a class="base-header" href="{% url 'users:account' user.id %}">Моя сторінка</a>
+                            <a class="base-header" href="{% url 'users:logout' %}">Вийти</a>
+                        </div>
+                    {% else %}
+                        <div class="base-header-2">
+                            <a class="base-header" href="{% url 'users:register' %}">Реєстрація</a>
+                            <a class="base-header" href="{% url 'users:login' %}">Вхід</a>
+                        </div>
+                    {% endif %}
+                </td>
             </tr>
         </table>
     </header>
@@ -47,22 +85,28 @@
                 <td>
                     <p>Що в нас тут за сайт?</p>
                     <ul>
-                        <li><a href="#">Нові фільми</a></li>
-                        <li><a href="#">Світова класика</a></li>
-                        <li><a href="#">Трендові серіали</a></li>
-                        <li><a href="#">Трейлери новинок</a></li>
+                        <li>Нові фільми</li>
+                        <li>Світова класика</li>
+                        <li>Трендові серіали</li>
+                        <li>Трейлери новинок</li>
                     </ul>
                 </td>
                 <td>&nbsp</td>
                 <td>&nbsp</td>
                 <td>&nbsp</td>
-                <td>&#169;Rights not reserved. Copy, please.</td>
+                <td>
+                    &#169;Проект виконано в навчальних цілях,<br> посилання на джерела інформації:
+                    <ul>
+                        <li><a href="https://megogo.net/ua">Megogo.net</a></li>
+                        <li>2</li>
+                    </ul>
+                </td>
                 <td>
                     <p>Навігаця сайтом</p>
                     <ul>
-                        <li><a href="#">На головну</a></li>
-                        <li><a href="#">Блог</a></li>
-                        <li><a href="#">Випадкова категорія</a></li>
+                        <li><a href="{% url 'films:index' %}">На головну</a></li>
+                        <li><a href="{% url 'films:blog' %}">Блог</a></li>
+<!--                        <li><a href="#">Випадкова категорія</a></li>-->
                         <li><a href="{% url 'films:random_film' %}">Випадковий фільм</a></li>
                     </ul>
                 </td>

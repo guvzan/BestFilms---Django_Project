@@ -41,7 +41,7 @@
 
         <table class="preview-content">
             <tr>
-            {% for film in fantastic %}
+            {% for film in fantastyka %}
                 <td>
                     <div class="film-preview">
                         <a href="{% url 'films:film' film.id %}"><img class="preview-image" src="{{ film.image.url }}"></a>
@@ -61,14 +61,14 @@
 
 
         <div class="category-title">
-        <h2 class="category-title-text">Детективи</h2>
+        <h2 class="category-title-text">Комедії</h2>
     </div>
 
 <!--        Поставити слайдер-->
 
         <table class="preview-content">
             <tr>
-            {% for film in detective %}
+            {% for film in comedy %}
                 <td>
                     <div class="film-preview">
                         <a href="{% url 'films:film' film.id %}"><img class="preview-image" src="{{ film.image.url }}"></a>

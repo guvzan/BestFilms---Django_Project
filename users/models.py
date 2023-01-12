@@ -12,22 +12,22 @@ def default_messages():
 
 class CustomUser(AbstractUser):
     """Кастомний користувач"""
-    status = models.CharField(max_length=100, default='---')
-    dob = models.DateField(blank=True, null=True, default='1999-12-31')
-    about = models.TextField(blank=True, null=True, default='---')
-    image = models.ImageField(upload_to='images', blank=True, null=True)
-    post_list = models.JSONField(blank=True, null=True, default=default_post_list)
+    status = models.CharField(max_length=100, default='---', verbose_name='Статус')
+    dob = models.DateField(blank=True, null=True, default='1999-12-31', verbose_name='Дата народження')
+    about = models.TextField(blank=True, null=True, default='---', verbose_name='Про себе')
+    image = models.ImageField(upload_to='images/avatars', blank=True, null=True, verbose_name='Аватар')
+    post_list = models.JSONField(blank=True, null=True, default=default_post_list, verbose_name='Список постів')
 
 
 class PagePost(models.Model):
     """Запис на власній сторінці"""
-    title = models.CharField(max_length=20)
-    image = models.ImageField(blank=True, null=True, upload_to='images/post_images')
-    text = models.TextField(blank=True, null=True)
-    likes = models.IntegerField(default=0)
-    list_of_likers = models.JSONField(blank=True, null=True, default=default_list_of_likers)
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id)
-    date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    title = models.CharField(max_length=20, verbose_name='Заголовок')
+    image = models.ImageField(blank=True, null=True, upload_to='images/post_images', verbose_name='Зображення')
+    text = models.TextField(blank=True, null=True, verbose_name='Текст')
+    likes = models.IntegerField(default=0, verbose_name='К-ть лайків')
+    list_of_likers = models.JSONField(blank=True, null=True, default=default_list_of_likers, verbose_name='Хто лайкнув')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id, verbose_name='Автор')
+    date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True, verbose_name='Дата додання')
 
     def __str__(self):
         return self.title
@@ -40,8 +40,8 @@ class PagePost(models.Model):
 
 class Inbox(models.Model):
     """Поштова скринька. Для повідомлень, наприклад"""
-    messages = models.JSONField(blank=True, null=True, default=default_messages)
-    customuser = models.OneToOneField('CustomUser', on_delete=models.CASCADE)
+    messages = models.JSONField(blank=True, null=True, default=default_messages, verbose_name='Повідомлення')
+    customuser = models.OneToOneField('CustomUser', on_delete=models.CASCADE, verbose_name='Кому належить')
 
     def __str__(self):
         return f"{self.customuser.username} inbox"
@@ -50,9 +50,9 @@ class Inbox(models.Model):
 class Message(models.Model):
     """Повідомлення (як СМС)"""
     text = models.TextField()
-    author = models.ForeignKey(CustomUser, related_name='author', on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id)
-    receiver = models.ForeignKey(CustomUser, related_name='receiver', on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id)
-    time = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(CustomUser, verbose_name='Автор', related_name='author', on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id)
+    receiver = models.ForeignKey(CustomUser, verbose_name='Отримувач', related_name='receiver', on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id)
+    time = models.DateTimeField(auto_now_add=True, verbose_name='Час надсилання')
 
     def __str__(self):
         return self.text[:10]

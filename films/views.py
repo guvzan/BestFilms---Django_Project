@@ -1,25 +1,42 @@
 import random
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 from .models import *
 from .forms import *
 
 def index(request):
     """Головна сторінка"""
+    #Бойовики
     blockbusters = []
     blockbusters_id = Tag.objects.filter(title='Бойовик')
     if blockbusters_id:
-        blockbusters = Film.objects.filter(tag1=blockbusters_id) | Film.objects.filter(tag2=blockbusters_id)
+        blockbusters = Film.objects.filter(tag1=blockbusters_id[0].id) | Film.objects.filter(tag2=blockbusters_id[0].id)
+
+    # Комедії
+    comedy = []
+    comedy_id = Tag.objects.filter(title='Комедія')
+    if comedy_id:
+        comedy = Film.objects.filter(tag1=comedy_id[0].id) | Film.objects.filter(tag2=comedy_id[0].id)
+
+    # Фантастика
+    fantastyka = []
+    fantastyka_id = Tag.objects.filter(title='Фантастика')
+    if fantastyka_id:
+        fantastyka = Film.objects.filter(tag1=fantastyka_id[0].id) | Film.objects.filter(tag2=fantastyka_id[0].id)
+
     films = Film.objects.filter()
     context = {
         'films': films[:4],
-        'blockbusters': blockbusters[:4]
+        'blockbusters': blockbusters[:4],
+        'comedy': comedy,
+        'fantastyka': fantastyka
     }
     return render(request, 'films/index.html', context)
 
 def more(request):
     """Показати детальнішу інформацію"""
-    films = Film.objects.filter()
+    films = Film.objects.filter().order_by('title')
     context = {
         'films': films
     }
@@ -32,26 +49,32 @@ def film(request, film_id):
 
     #Отримати нік користувача
     user_id = None
+    accuser = None
     if request.user.is_authenticated:
         user_id = request.user.id
+        accuser = CustomUser.objects.get(id=user_id)
 
-
-    if request.method != 'POST':
-        form = CommentForm(film_id=film_id, user_id=user_id)
+    if str(request.user) == 'AnonymousUser':
+        form = None
     else:
-        form = CommentForm(request.POST, film_id=film_id, user_id=user_id)
-        if form.is_valid():
-            form.save()
-            return redirect('films:film', film_id)
+        if request.method != 'POST':
+            form = CommentForm(film_id=film_id, user_id=user_id)
+        else:
+            form = CommentForm(request.POST, film_id=film_id, user_id=user_id)
+            if form.is_valid():
+                form.save()
+                return redirect('films:film', film_id)
 
     context = {
         'film': film,
         'comments': comments,
-        'form': form
+        'form': form,
+        'accuser': accuser
     }
     return render(request, 'films/chosen_film.html', context)
 
 
+@login_required
 def new_tag(request):
     """Додати новий тег"""
     if request.method != 'POST':
@@ -60,12 +83,18 @@ def new_tag(request):
         form = TagForm(data = request.POST)
         if form.is_valid():
             form.save()
-            return redirect('films:index')
+            return redirect('films:new_tag')
 
-    context = {'form': form}
+    tags = Tag.objects.all().order_by('title').values()
+
+    context = {
+        'form': form,
+        'tags': tags
+    }
     return render(request, 'films/new_tag.html', context)
 
 
+@login_required
 def new_film(request):
     """Додати новий фільм"""
     if request.method != 'POST':
@@ -74,17 +103,19 @@ def new_film(request):
         form = FilmForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            return redirect('films:index')
+            return redirect('films:new_film')
 
     context = {'form': form}
     return render(request, 'films/new_film.html', context)
 
 
+@login_required
 def add_like(request, film_id, comment_id):
     """Додати лайк"""
     comment = Comment.objects.get(id = comment_id)
     comment.like()
     return redirect('films:film', film_id)
+
 
 def random_film(request):
     """Показати рандомний фільм"""

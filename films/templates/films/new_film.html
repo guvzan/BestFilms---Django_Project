@@ -1,11 +1,42 @@
 {% extends 'films/base.html' %}
 
 {% block content %}
-    <h1>Додати новий фільм:</h1>
+    <h1 align="center">Додати новий фільм:</h1>
 
     <form action="{% url 'films:new_film' %}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button name="submit">Додати</button>
+        <table align="center" class="film-add-table">
+            <tr>
+                <td>Постер:</td><td>{{ form.image }}</td>
+            </tr>
+            <tr>
+                <td>Назва:</td><td>{{ form.title }}</td>
+            </tr>
+            <tr>
+                <td>Опис:</td><td>{{ form.text }}</td>
+            </tr>
+            <tr>
+                <td>Трейлер:</td><td>{{ form.url }}</td>
+            </tr>
+            <tr>
+                <td>Тривалість:</td><td>{{ form.duration }}</td>
+            </tr>
+            <tr>
+                <td>Країна:</td><td>{{ form.country }}</td>
+            </tr>
+            <tr>
+                <td>Жанр:</td><td>{{ form.tag1 }}</td>
+            </tr>
+            <tr>
+                <td>Жанр:</td><td>{{ form.tag2 }}</td>
+            </tr>
+            <tr>
+                <td></td><td><button id="comment-add-button" name="submit">Додати</button></td>
+            </tr>
+            <tr>
+                <td></td><td><br></td>
+            </tr>
+        </table>
+
     </form>
 {% endblock content %}

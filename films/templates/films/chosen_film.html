@@ -27,13 +27,37 @@
     background-repeat: no-repeat;
 }
 </style>
+    <div>
+        <h1 align="center">{{ film.title }}</h1>
+        <div class="film-caption">
+            <table>
+                <tr>
+                    <td>
+                        <img id="film-image-caption" src="{{ film.image.url }}">
+                    </td>
+                    <td>
+                        <div class="film-text-caption">
+                            <p>{{ film.text }}</p>
+                            <p>
+                                {{ film.country }}
+                                {{ film.tag1 }}
+                                {{ film.tag2 }}
+                                {{ film.duration }} хв
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
 
     <div class="film-trailer-container">
-        <h1 align="center">Трейлер</h1>
+        <h2 align="center">Трейлер</h2>
         <iframe class="film-trailer" width="560" height="315" src={{ film.url }} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     </div>
     <div class="film-comments-container">
-        <h1 align="center">Коментарі</h1>
+        <h2 align="center">Коментарі</h2>
         <ul>
             {% for comment in comments %}
                 <li>
@@ -52,7 +76,7 @@
                         </p>
 
 
-                        <div class="comment-content">
+                        <div class="comment-content simple-shadow">
                             <p class="comment-title"><b>{{ comment.title }}</b></p>
                             <p><i>{{ comment.text }}</i></p>
 
@@ -63,14 +87,38 @@
             {% empty %}
                 <p>Коментарів до цього фільму ще немає.</p>
             {% endfor %}
-            <h3 align="center">Додати коментар</h3>
-            <div class="comment-content">
-                <form action="{% url 'films:film' film.id %}" method="post">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <button name="submit">Опублікувати</button>
-                </form>
-            </div>
+            {% if user.is_authenticated %}
+                <h3 align="center">Додати коментар</h3>
+
+                <div class="comment-content">
+                    <form action="{% url 'films:film' film.id %}" method="post">
+                        {% csrf_token %}
+                        {% if user.image %}
+                            <a href="{% url 'users:account' user.id %}"><img class="comment-avatar comment-content shadow" src="{{ accuser.image.url }}"></a>
+                            <a href="{% url 'users:account' accuser.id %}">{{ accuser.username }}</a>
+                            <p>
+                                {{ form.title }}
+                                <button id="comment-add-button" name="submit">Опублікувати</button>
+                            </p>
+                        {% else %}
+                            <img class="comment-avatar comment-content shadow" src="{% static 'films/img/anon_image.png' %}">
+                            <a href="{% url 'users:account' accuser.id %}">{{ accuser.username }}</a>
+                                <p>
+                                {{ form.title }}
+                                <button id="comment-add-button" name="submit">Опублікувати</button>
+                            </p>
+                        {% endif %}
+                        <div>
+                            {{ form.text }}
+                            {{ form.author }}
+                            {{ form.film }}
+                        </div>
+                    </form>
+                </div>
+            {% else %}
+                <h3 align="center">Лише авторизовані користувачі можуть коментувати</h3>
+                <p align="center"><a href="{% url 'users:login' %}"><button>Авторизуватись</button></a></p>
+            {% endif %}
 
         </ul>
     </div>

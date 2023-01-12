@@ -4,14 +4,14 @@ from users.models import CustomUser
 
 class Film(models.Model):
     """Фільм"""
-    title = models.CharField(max_length = 100)
-    image = models.ImageField(upload_to='images')
-    text = models.TextField()
-    duration = models.IntegerField()
-    url = models.URLField()
-    country = models.ForeignKey('Tag', related_name='country', on_delete=models.PROTECT)
-    tag1 = models.ForeignKey('Tag', related_name='tag1', on_delete=models.PROTECT, blank=True, null=True)
-    tag2 = models.ForeignKey('Tag', related_name='tag2', on_delete=models.PROTECT, blank=True, null=True)
+    title = models.CharField(max_length = 100, verbose_name='Назва')
+    image = models.ImageField(upload_to='images', verbose_name='Постер')
+    text = models.TextField(verbose_name='Опис')
+    duration = models.IntegerField(verbose_name='Тривалість у хв')
+    url = models.URLField(verbose_name='Посилання на трейлер')
+    country = models.ForeignKey('Tag', related_name='country', on_delete=models.PROTECT, verbose_name='Країна')
+    tag1 = models.ForeignKey('Tag', related_name='tag1', on_delete=models.PROTECT, blank=True, null=True, verbose_name='Тег 1')
+    tag2 = models.ForeignKey('Tag', related_name='tag2', on_delete=models.PROTECT, blank=True, null=True, verbose_name='Тег 2')
 
     def __str__(self):
         return self.title
@@ -19,7 +19,7 @@ class Film(models.Model):
 
 class Tag(models.Model):
     """Тег"""
-    title = models.CharField(max_length = 20)
+    title = models.CharField(max_length = 20, verbose_name='Назва тегу')
 
     def __str__(self):
         return self.title
@@ -27,12 +27,12 @@ class Tag(models.Model):
 
 class Comment(models.Model):
     """Коментар до фільму"""
-    film = models.ForeignKey('Film', on_delete=models.PROTECT)
+    film = models.ForeignKey('Film', on_delete=models.PROTECT, verbose_name='Фільм')
     title = models.CharField(max_length = 30, verbose_name='Заголовок')
     text = models.TextField(verbose_name='Текст')
-    likes = models.IntegerField(default=0)
-    date_added = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id)
+    likes = models.IntegerField(default=0, verbose_name='К-ть лайків')
+    date_added = models.DateTimeField(auto_now_add=True, verbose_name='Дата додання')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id, verbose_name='Автор')
 
     def __str__(self):
         return self.title
@@ -44,10 +44,10 @@ class Comment(models.Model):
 
 class BlogPost(models.Model):
     """Допис у блозі"""
-    film = models.ForeignKey('Film', on_delete=models.CASCADE)
-    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id)
+    film = models.ForeignKey('Film', on_delete=models.CASCADE, verbose_name='Заголовок')
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id, verbose_name='Автор')
     text = models.TextField(verbose_name='Текст')
-    date_added = models.DateTimeField(auto_now_add=True)
+    date_added = models.DateTimeField(auto_now_add=True, verbose_name='Дата додання')
 
     def __str__(self):
         return self.text[:20]

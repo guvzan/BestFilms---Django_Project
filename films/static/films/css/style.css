@@ -1,14 +1,36 @@
 {% load static %}
 
+html{
+    overflow-x: hidden;
+}
+
 header{
     background-color: #237F9E;
     font-size: 24px;
     font-family: 'Arial';
     border: 2px #EB6386 solid;
     border-radius: 5px;
-
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
+.film-caption{
+    width: 95%;
+}
+
+.film-text-caption{
+    margin-left: 5%;
+    margin-right: 5%;
+    font-family: 'Arial';
+    font-size: 22px;
+    vertical-align: top;
+}
+
+#film-image-caption{
+    width: 350px;
+    border-radius: 10px;
+}
 
 
 .logo{
@@ -89,12 +111,16 @@ a:hover{
 
 footer{
     background-color: gray;
-    height: 200px;
     background-color: #237F9E;
+    height: 200px;
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 24px;
     font-family: 'Arial';
     border-radius: 5px;
     border: 3px solid #EB6386;
+
 }
 
 .footer-content{
@@ -174,6 +200,9 @@ footer{
 
 .comment{
     margin-bottom: 7%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 95%;
     font-size: 22px;
     font-family: 'Arial';
     text-align: center;
@@ -232,9 +261,7 @@ footer{
     align: justify;
 }
 
-body{
-    background: #D0BCD6;
-}
+
 
 .account-content{
     margin-left: 5%;
@@ -312,6 +339,7 @@ body{
     width: 100%;
     border: white solid 1px;
     text-align: justify;
+    background: #EBDF34;
 }
 
 
@@ -335,6 +363,104 @@ body{
 }
 
 .message-on-acc{
+    border: #EB6386 solid 2px;
+    border-radius: 5px;
+    margin-bottom: 7%;
+    height: 100%;
+    margin-top: 0%;
+    background: #4CC3EB;
+    width: 100%;
+}
+
+.just-to-see-borders{
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    background: #EBDF34;
+}
+
+.message-button{
+    margin: 2%;
+}
+
+.some-messages{
+    width: 100%;
+}
+
+.table-header-3{
+    width: 33%
+}
+
+
+.base-header{
+    vertical-align: middle;
+    margin-right: 2%;
+}
+
+.base-header-2{
+    width: 100%;
+    text-align: right;
+}
+
+.td-5{
+    width: 10000px;
+}
+
+#message-count{
+    vertical-align: middle;
+}
+
+#add-comm-title{
+    width: 250px;
+    border-radius: 5px;
+    border: black solid 2px;
+    box-shadow: 10px 5px 5px #EB6386;
+}
+
+.input-char{
+    width: 250px;
+    border-radius: 5px;
+    border: black solid 2px;
+    box-shadow: 10px 5px 5px #EB6386;
+}
+
+.input-micro{
+    width: 125px;
+    border-radius: 5px;
+    border: black solid 2px;
+    box-shadow: 10px 5px 5px #EB6386;
+}
+
+.input-file{
+    width: 250px;
+}
+
+#add-comm-text{
+    border: black solid 2px;
+    border-radius: 5px;
+    box-shadow: 10px 5px 5px #EB6386;
+    resize: none;
+}
+
+#comment-add-button{
+    border-radius: 5px;
+    border: black solid 2px;
+    box-shadow: 10px 5px 5px #EB6386;
+    background: white;
+}
+
+#comment-add-button:hover{
+    transform: scale(0.99);
+    background: transparent;
+}
+
+.shadow{
+    box-shadow: 10px 5px 5px #EB6386;
+    border: black solid 2px;
+}
+
+.simple-shadow{
+    box-shadow: 10px 5px 5px #EB6386;
 }
 
 

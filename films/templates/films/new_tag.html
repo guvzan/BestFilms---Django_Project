@@ -1,11 +1,21 @@
 {% extends 'films/base.html' %}
 
 {% block content %}
-    <h1>Додати новий тег:</h1>
+    <h1 align="center">Додати новий тег:</h1>
 
     <form action="{% url 'films:new_tag' %}" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button name="submit">Додати</button>
+        <p align="center">{{ form.title }}</p>
+        <p align="center"><button name="submit">Додати</button></p>
     </form>
+    <div class="post-on-page">
+        <h2 align="center">Список існуючих тегів:</h2>
+        <ul>
+            {% for tag in tags %}
+                <li>{{ tag.title }}</li>
+            {% empty %}
+                <li>Додайте перший тег</li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock content %}

@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-zign2$vijb)o9-+&=-(q@ply9)g91p%m_+g=z-=nq^h#d-m+e@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -134,3 +134,5 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'users.CustomUser'
+
+LOGIN_URL = 'users:login'
