@@ -110,10 +110,15 @@ def new_film(request):
 
 
 @login_required
-def add_like(request, film_id, comment_id):
+def add_like(request, film_id, comment_id, user_id):
     """Додати лайк"""
     comment = Comment.objects.get(id = comment_id)
-    comment.like()
+    if int(user_id) not in comment.list_of_likers['liked']:
+        comment.list_of_likers['liked'].append(user_id)
+        comment.like()
+    else:
+        comment.list_of_likers['liked'].remove(user_id)
+        comment.unlike()
     return redirect('films:film', film_id)
 
 

@@ -71,9 +71,8 @@
                                                         <p><b>From:</b> {{ message.author.username }}</p>
                                                         <p><i>{{ message.text }}</i></p>
                                                         <p><i>{{ message.time|date:'d-M-Y, h:m' }}</i></p>
-                                                        <form action="{% url 'users:mark_as_read' user.id message.id %}">
-                                                            <button>Прочитано</button>
-                                                            <button formaction="{% url 'users:delete_message' user.id message.id %}">Видалити</button>
+                                                        <form action="{% url 'users:delete_message' user.id message.id %}">
+                                                            <button name="submit">Видалити</button>
                                                         </form>
                                                     </div>
                                                 </tr>
@@ -106,9 +105,8 @@
                                                         <p><b>From:</b> {{ message.author.username }}</p>
                                                         <p><i>{{ message.text }}</i></p>
                                                         <p><i>{{ message.time|date:'d-M-Y, h:m' }}</i></p>
-                                                        <form action="{% url 'users:mark_as_read' user.id message.id %}">
-                                                            <button>Прочитано</button>
-                                                            <button formaction="{% url 'users:delete_message' user.id message.id %}">Видалити</button>
+                                                        <form action="{% url 'users:delete_message' user.id message.id %}">
+                                                            <button name="submit">Видалити</button>
                                                         </form>
                                                     </div>
                                                 </tr>

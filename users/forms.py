@@ -38,3 +38,8 @@ class MessageForm(forms.ModelForm):
             'author': forms.TextInput(attrs={'type': 'hidden'}),
             'text': forms.Textarea(attrs={'cols': 50, 'rows': 10}),
         }
+
+
+class SearchUserForm(forms.Form):
+    """Форма для вводу імені користувача і пошуку за іменем"""
+    username = forms.CharField(max_length=100, label='UsernameInput', required=False)

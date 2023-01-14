@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 def default_post_list():
-    return dict(id = [])
+    return dict(id = [], saved_accs=[])
 
 def default_list_of_likers():
     return dict(liked = [], saved = [])
@@ -35,6 +35,11 @@ class PagePost(models.Model):
     def like(self):
         """Лайкнути пост"""
         self.likes += 1
+        self.save()
+
+    def unlike(self):
+        """Забрати лайк з поста"""
+        self.likes -= 1
         self.save()
 
 

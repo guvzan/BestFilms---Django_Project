@@ -2,6 +2,9 @@ from django.db import models
 
 from users.models import CustomUser
 
+def default_list_of_likers():
+    return dict(liked = [])
+
 class Film(models.Model):
     """Фільм"""
     title = models.CharField(max_length = 100, verbose_name='Назва')
@@ -33,6 +36,7 @@ class Comment(models.Model):
     likes = models.IntegerField(default=0, verbose_name='К-ть лайків')
     date_added = models.DateTimeField(auto_now_add=True, verbose_name='Дата додання')
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=CustomUser.objects.get(id=1).id, verbose_name='Автор')
+    list_of_likers = models.JSONField(blank=True, null=True, default=default_list_of_likers, verbose_name='Хто лайкнув')
 
     def __str__(self):
         return self.title
@@ -41,6 +45,18 @@ class Comment(models.Model):
         """Збільшити к-ть лайків на 1"""
         self.likes += 1
         self.save()
+
+    def unlike(self):
+        """Зменшити к-ть лайків на 1"""
+        self.likes -= 1
+        self.save()
+
+    def check_if_liked(self, user_id):
+        """Перевірити, чи користувач поставив лайк"""
+        if int(user_id) in self.list_of_likers['liked']:
+            return True
+        else:
+            return False
 
 class BlogPost(models.Model):
     """Допис у блозі"""

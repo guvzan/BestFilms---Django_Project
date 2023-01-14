@@ -1,5 +1,6 @@
 {% extends 'films/base.html' %}
 {% load static %}
+{% load films_extras %}
 
 {% block head %}
     <title>{{ film.title }}</title>
@@ -21,8 +22,31 @@
 }
 
 
-.like-button:hover{
+.liked:hover{
+    background:  url('{% static 'films/img/like_hollow.png' %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+
+.unliked:hover{
     background:  url('{% static 'films/img/like.png' %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+
+.liked{
+    background:  url('{% static 'films/img/like.png' %}');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+
+.unliked
+    background:  url('{% static 'films/img/like_hollow.png' %}');
     background-size: contain;
     background-repeat: no-repeat;
 }
@@ -38,6 +62,7 @@
                     <td>
                         <div class="film-text-caption">
                             <p>{{ film.text }}</p>
+                            <hr>
                             <p>
                                 {{ film.country }}
                                 {{ film.tag1 }}
@@ -63,14 +88,18 @@
                 <li>
                     <div class="comment">
                         <p>
-                            <form action="{% url 'films:add_like' film.id comment.id %}">
+                            <form action="{% url 'films:add_like' film.id comment.id user.id %}">
                                 {% if comment.author.image %}
                                     <a href="{% url 'users:account' comment.author.id %}"><img class="comment-avatar comment-content" src="{{ comment.author.image.url }}"></a>
                                 {% else %}
                                     <img class="comment-avatar comment-content" src="{% static 'films/img/anon_image.png' %}">
                                 {% endif %}
                                 <a href="{% url 'users:account' comment.author.id %}">{{ comment.author }}</a>, {{ comment.date_added|date:'Y M d' }}
-                                <button class="like-button"></button>
+                                {% if comment.list_of_likers.liked|check_if_liked:user.id %}
+                                    <button class="like-button liked"></button>
+                                {% else %}
+                                    <button class="like-button unliked"></button>
+                                {% endif %}
                                 {{ comment.likes }}
                             </form>
                         </p>

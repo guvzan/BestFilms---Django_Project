@@ -58,7 +58,12 @@ def account(request, user_id):
 def add_acc_like(request, user_id, post_id):
     """Додати лайк"""
     post = PagePost.objects.get(id = post_id)
-    post.like()
+    if int(user_id) not in post.list_of_likers['liked']:
+        post.list_of_likers['liked'].append(user_id)
+        post.like()
+    else:
+        post.list_of_likers['liked'].remove(user_id)
+        post.unlike()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', 'films:index'))
 
 
@@ -176,5 +181,50 @@ def delete_message(request, user_id, message_id):
             inbox.messages[cat].remove(message_id)
     inbox.save()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', 'films:index'))
+
+
+@login_required
+def save_acc(request, to_save_id, saver_id):
+    """Відстежувати профіль користувача"""
+    saver = CustomUser.objects.get(id=saver_id)
+    if int(to_save_id) not in saver.post_list['saved_accs']:
+        saver.post_list['saved_accs'].append(to_save_id)
+        saver.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', 'films:index'))
+
+
+@login_required
+def saved_accs(request, user_id):
+    """Список профілів, що відстежуються користувачем"""
+    accuser = CustomUser.objects.get(id=user_id)
+    profile_list = accuser.post_list['saved_accs']
+    profiles = []
+    for p in profile_list:
+        profiles.append(CustomUser.objects.filter(id=p)[0])
+
+    users = None
+    if request.method == 'POST':
+        form = SearchUserForm(request.POST)
+        if form.is_valid():
+            users = find_user(form.cleaned_data['username'])
+    else:
+        form = SearchUserForm()
+
+
+    context = {
+        'accuser': accuser,
+        'profiles': profiles,
+        'form': form,
+        'users': users
+    }
+    return render(request, 'users/saved_accs.html', context)
+
+
+def find_user(username):
+    """Пошук користувача за іменем"""
+    if username == '':
+        return CustomUser.objects.filter(id=1)
+    list_of_users = CustomUser.objects.filter(username__icontains=username)
+    return list_of_users
 
 

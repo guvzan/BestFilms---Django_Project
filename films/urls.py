@@ -20,7 +20,7 @@ urlpatterns = [
     path('new_film', views.new_film, name='new_film'),
 
     #Додавання лайку до коментаря
-    path('film/<int:film_id>/<int:comment_id>', views.add_like, name='add_like'),
+    path('film/<int:film_id>/<int:comment_id>/<int:user_id>', views.add_like, name='add_like'),
 
     #Сторінка рандомного фільму
     path('film/', views.random_film, name='random_film'),

@@ -42,7 +42,7 @@
                             </div>
                             <table>
                                 <tr>
-                                    <td width="83%"><p>Фільм: {{ post.film.title }}</p></td>
+                                    <td width="83%"><p>Фільм: <a href="{% url 'films:film' post.film.id %}">{{ post.film.title }}</a></p></td>
                                     <td width="17%"><p>Опубліковано: {{ post.date_added|date:'d M Y' }}</p></td>
                                 </tr>
                             </table>
