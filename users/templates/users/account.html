@@ -94,7 +94,7 @@
                 <table>
                     <tr>
                         <td>&nbsp;</td>
-                        <td><a href="{% url 'users:show_messages' user.id %}">Мої повідомлення</a></td>
+                        <td><a href="{% url 'users:show_messages' user.id 1 %}">Мої повідомлення</a></td>
                         {% if new_messages_count %}
                             <td>
                                 <div id="message-icon">
@@ -118,7 +118,7 @@
                         </td>
                         <td>&nbsp;</td>
                         <td>
-                            <form action="{% url 'users:save_acc' accuser.id user.id %}">
+                            <form action="{% url 'users:show_messages' user.id accuser.id %}">
                                 <button>Надіслати повідомлення</button>
                             </form>
                         </td>

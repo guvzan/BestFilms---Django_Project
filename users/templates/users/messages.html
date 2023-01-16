@@ -6,7 +6,7 @@
 
     <div class="account-content">
         <div class="new-message">
-            <form action="{% url 'users:show_messages' user.id %}" method="post">
+            <form method="post">
                 {% csrf_token %}
                 <h3>Нове повідомлення до {{ form.receiver }}</h3>
                 <p>{{ form.text }}</p>
@@ -33,7 +33,7 @@
                                             {% for message in query %}
                                                 <tr>
                                                     <div class="message-on-acc">
-                                                        <p><b>From:</b> {{ message.author.username }}</p>
+                                                        <p><b>From:</b> <a href="{% url 'users:account' message.author.id %}">{{ message.author.username }}</a></p>
                                                         <p><i>{{ message.text }}</i></p>
                                                         <p><i>{{ message.time|date:'d-M-Y, h:m' }}</i></p>
                                                         <form action="{% url 'users:mark_as_read' user.id message.id %}">
@@ -68,7 +68,7 @@
                                             {% for message in query %}
                                                 <tr>
                                                     <div class="message-on-acc">
-                                                        <p><b>From:</b> {{ message.author.username }}</p>
+                                                        <p><b>From:</b> <a href="{% url 'users:account' message.author.id %}">{{ message.author.username }}</a></p>
                                                         <p><i>{{ message.text }}</i></p>
                                                         <p><i>{{ message.time|date:'d-M-Y, h:m' }}</i></p>
                                                         <form action="{% url 'users:delete_message' user.id message.id %}">
@@ -102,7 +102,7 @@
                                             {% for message in query %}
                                                 <tr>
                                                     <div class="message-on-acc">
-                                                        <p><b>From:</b> {{ message.author.username }}</p>
+                                                        <p><b>To:</b> <a href="{% url 'users:account' message.receiver.id %}">{{ message.receiver.username }}</a></p>
                                                         <p><i>{{ message.text }}</i></p>
                                                         <p><i>{{ message.time|date:'d-M-Y, h:m' }}</i></p>
                                                         <form action="{% url 'users:delete_message' user.id message.id %}">

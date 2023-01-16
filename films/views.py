@@ -1,5 +1,5 @@
 import random
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from .models import *
@@ -44,7 +44,7 @@ def more(request):
 
 def film(request, film_id):
     """Конкретний фільм"""
-    film = Film.objects.get(id=film_id)
+    film = get_object_or_404(Film, id=film_id)
     comments = Comment.objects.filter(film=film_id).order_by('-likes')
 
     #Отримати нік користувача
@@ -52,7 +52,7 @@ def film(request, film_id):
     accuser = None
     if request.user.is_authenticated:
         user_id = request.user.id
-        accuser = CustomUser.objects.get(id=user_id)
+        accuser = get_object_or_404(CustomUser, id=user_id)
 
     if str(request.user) == 'AnonymousUser':
         form = None
@@ -112,7 +112,7 @@ def new_film(request):
 @login_required
 def add_like(request, film_id, comment_id, user_id):
     """Додати лайк"""
-    comment = Comment.objects.get(id = comment_id)
+    comment = get_object_or_404(Comment, id=comment_id)
     if int(user_id) not in comment.list_of_likers['liked']:
         comment.list_of_likers['liked'].append(user_id)
         comment.like()

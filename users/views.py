@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
@@ -25,7 +25,7 @@ def register(request):
 @login_required
 def account(request, user_id):
     """Сторінка користувача за ід"""
-    user = CustomUser.objects.get(id=user_id)
+    user = get_object_or_404(CustomUser, id=user_id)
     inbox = Inbox.objects.filter(customuser=user_id)
     if not inbox:
         new_inbox = Inbox(customuser=user)
@@ -57,7 +57,7 @@ def account(request, user_id):
 @login_required
 def add_acc_like(request, user_id, post_id):
     """Додати лайк"""
-    post = PagePost.objects.get(id = post_id)
+    post = get_object_or_404(PagePost, id=post_id)
     if int(user_id) not in post.list_of_likers['liked']:
         post.list_of_likers['liked'].append(user_id)
         post.like()
@@ -70,8 +70,8 @@ def add_acc_like(request, user_id, post_id):
 @login_required
 def share(request, post_id, user_id):
     """Поділитись дописом"""
-    post = PagePost.objects.get(id = post_id)
-    user = CustomUser.objects.get(id = user_id)
+    post = get_object_or_404(PagePost, id=post_id)
+    user = get_object_or_404(CustomUser, id=user_id)
     liked_list = post.list_of_likers['saved']
     saved_list = user.post_list['id']
 
@@ -88,7 +88,7 @@ def share(request, post_id, user_id):
 @login_required
 def create_page_post(request, user_id):
     """Створити допис на сторінці"""
-    user = CustomUser.objects.get(id=user_id)
+    user = get_object_or_404(CustomUser, id=user_id)
     if request.method == 'GET':
         form = PagePostForm(user_id=user_id)
     else:
@@ -105,10 +105,10 @@ def create_page_post(request, user_id):
 
 
 @login_required
-def show_messages(request, user_id):
+def show_messages(request, user_id, default_id):
     """Показати повідомлення"""
-    accuser = CustomUser.objects.get(id=user_id)
-    inbox = Inbox.objects.get(customuser=user_id)
+    accuser = get_object_or_404(CustomUser, id=user_id)
+    inbox = get_object_or_404(Inbox, customuser=user_id)
     unseen_messages = []
     seen_messages = []
     sent_messages = []
@@ -129,11 +129,9 @@ def show_messages(request, user_id):
             sent_messages.insert(0, exact_message)
 
     if request.method == 'GET':
-        form = MessageForm(user_id=user_id)
+        form = MessageForm(user_id=user_id, receiver_id=default_id)
     else:
-        form = MessageForm(request.POST, user_id=user_id)
-        print(form.is_valid())
-        print(request.POST)
+        form = MessageForm(request.POST, user_id=user_id, receiver_id=default_id)
         if form.is_valid():
             new_message = form.save()
             inbox.messages['send'].append(new_message.id)
@@ -159,9 +157,9 @@ def show_messages(request, user_id):
 @login_required
 def mark_as_read(request, user_id, message_id):
     """Позначити повідомлення як прочитане"""
-    message = Message.objects.get(id=message_id)
-    user = CustomUser.objects.get(id=user_id)
-    inbox = Inbox.objects.get(customuser=user)
+    message = get_object_or_404(Message, id=message_id)
+    user = get_object_or_404(CustomUser, id=user_id)
+    inbox = get_object_or_404(Inbox, customuser=user)
     inbox.messages['unseen'].remove(message_id)
     inbox.messages['seen'].append(message_id)
     inbox.save()
@@ -171,9 +169,9 @@ def mark_as_read(request, user_id, message_id):
 @login_required
 def delete_message(request, user_id, message_id):
     """Видалити повідомлення"""
-    message = Message.objects.get(id=message_id)
-    user = CustomUser.objects.get(id=user_id)
-    inbox = Inbox.objects.get(customuser=user)
+    message = get_object_or_404(Message, id=message_id)
+    user = get_object_or_404(CustomUser, id=user_id)
+    inbox = get_object_or_404(Inbox, customuser=user)
 
     for cat in inbox.messages:
         if int(message_id) in inbox.messages[cat]:
@@ -186,7 +184,7 @@ def delete_message(request, user_id, message_id):
 @login_required
 def save_acc(request, to_save_id, saver_id):
     """Відстежувати профіль користувача"""
-    saver = CustomUser.objects.get(id=saver_id)
+    saver = get_object_or_404(CustomUser, id=saver_id)
     if int(to_save_id) not in saver.post_list['saved_accs']:
         saver.post_list['saved_accs'].append(to_save_id)
         saver.save()
@@ -196,7 +194,7 @@ def save_acc(request, to_save_id, saver_id):
 @login_required
 def saved_accs(request, user_id):
     """Список профілів, що відстежуються користувачем"""
-    accuser = CustomUser.objects.get(id=user_id)
+    accuser = get_object_or_404(CustomUser, id=user_id)
     profile_list = accuser.post_list['saved_accs']
     profiles = []
     for p in profile_list:
@@ -226,5 +224,10 @@ def find_user(username):
         return CustomUser.objects.filter(id=1)
     list_of_users = CustomUser.objects.filter(username__icontains=username)
     return list_of_users
+
+
+def edit_acc(request, user_id):
+    """Редагувати профіль"""
+    pass
 
 

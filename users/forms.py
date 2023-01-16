@@ -29,8 +29,10 @@ class MessageForm(forms.ModelForm):
     """Форма для написання повідомлення"""
     def __init__(self, *args, **kwargs):
         user_id = kwargs.pop('user_id')
+        receiver_id = kwargs.pop('receiver_id')
         super().__init__(*args, **kwargs)
         self.fields['author'].initial = CustomUser.objects.get(id=user_id)
+        self.fields['receiver'].initial = CustomUser.objects.get(id=receiver_id)
     class Meta:
         model = Message
         fields = ["text", "author", "receiver"]

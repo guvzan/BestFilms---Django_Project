@@ -24,7 +24,7 @@ urlpatterns = [
     path('account/add_post/<int:user_id>/', views.create_page_post, name='create_page_post'),
 
     #Сторінка з повідомленнями
-    path('account/messages/<int:user_id>/', views.show_messages, name='show_messages'),
+    path('account/messages/<int:user_id>/<int:default_id>/', views.show_messages, name='show_messages'),
 
     #Позначити повідомлення як прочитане
     path('account/messages/readed/<int:user_id>/<int:message_id>/', views.mark_as_read, name='mark_as_read'),
@@ -36,5 +36,8 @@ urlpatterns = [
     path('account/save/<int:to_save_id>/<int:saver_id>/', views.save_acc, name='save_acc'),
 
     #Профілі, що відстежуються
-    path('account/saved_profiles/<int:user_id>', views.saved_accs, name='saved_accs'),
+    path('account/saved_profiles/<int:user_id>/', views.saved_accs, name='saved_accs'),
+
+    #Редагувати профіль
+    path('account/<int:user_id>/edit/', views.edit_acc, name='edit_acc'),
 ]

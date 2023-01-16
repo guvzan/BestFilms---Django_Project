@@ -49,9 +49,10 @@
                 <td><b>Аватар</b></td>
                 <td><b>Ім'я</b></td>
                 <td><b>Дата народження</b></td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
-                <td><hr></td><td><hr></td><td><hr></td>
+                <td><hr></td><td><hr></td><td><hr></td><td><hr></td>
             </tr>
             {% for profile in profiles %}
                 {% if profile.image %}
@@ -59,18 +60,28 @@
                         <td><a href="{% url 'users:account' profile.id %}"><img class="avatar" src="{{ profile.image.url }}"></a></td>
                         <td><a href="{% url 'users:account' profile.id %}">{{ profile.username }}</a></td>
                         <td>{{ profile.dob }}</td>
+                        <td>
+                            <form action="{% url 'users:show_messages' user.id profile.id %}">
+                                <button>Надіслати повідомлення</button>
+                            </form>
+                        </td>
                     </tr>
                     <tr>
-                        <td><hr></td><td><hr></td><td><hr></td>
+                        <td><hr></td><td><hr></td><td><hr></td><td><hr></td>
                     </tr>
                 {% else %}
                     <tr>
                         <td><a href="{% url 'users:account' profile.id %}"><img class="avatar" src="{% static 'films/img/anon_image.png' %}"></a></td>
                         <td><a href="{% url 'users:account' profile.id %}">{{ profile.username }}</a></td>
                         <td>{{ profile.dob }}</td>
+                        <td>
+                            <form action="{% url 'users:show_messages' user.id profile.id %}">
+                                <button>Надіслати повідомлення</button>
+                            </form>
+                        </td>
                     </tr>
                     <tr>
-                        <td><hr></td><td><hr></td><td><hr></td>
+                        <td><hr></td><td><hr></td><td><hr></td><td><hr></td>
                     </tr>
                 {% endif %}
             {% endfor %}
